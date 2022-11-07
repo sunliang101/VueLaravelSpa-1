@@ -15,7 +15,7 @@ PHP、Composer、NPMが利用可能な環境で
 ・.env修正  
 利用するDBに合わせて.envのDB情報を修正  
 
-・DB、テストデータ生成  1234
+・DB、テストデータ生成 
 `php artisan migrate --seed`
 
 ・フロントエンドパッケージインストール  
