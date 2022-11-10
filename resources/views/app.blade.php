@@ -13,11 +13,8 @@
     <link href="{{ mix('/css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-<div id="app">
-    <header-component></header-component>
-
-    <router-view></router-view>
-</div>
+    <div  id="app">
+    </div>
 <!-- Scripts -->
 <script src="{{ mix('/js/app.js') }}" defer></script>
 </body>
