@@ -45,6 +45,13 @@ const router = new VueRouter({
             component: TaskEditComponent,
             props: true
         },
+
+        {
+            path: '/contents/:taskId',
+            name: 'content.edit',
+            component: TaskShowComponent,
+            props: true
+        },
     ]
 });
 

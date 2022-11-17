@@ -24,7 +24,7 @@
   </template>
   <script>
     export default {
-      name: 'app',
+      name: 'app2',
       data() {
         return {
           drawer: true

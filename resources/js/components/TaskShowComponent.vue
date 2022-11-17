@@ -1,176 +1,322 @@
 <template>
-          <v-row>
-            <v-col
-              cols="12"
-              sm="2"
-            >
-              <v-sheet
-                rounded="lg"
-                min-height="268"
-              >
-              123
-                <!--  -->
-              </v-sheet>
-            </v-col>
-  
-            <v-col
-              cols="12"
-              sm="6"
-            >
-              <v-sheet
-                min-height="70vh"
-                rounded="lg"
-              >
-              <v-card
-    class="mx-auto"
-    max-width="400"
-  >
-    <v-card-title>
-      <h2 class="text-h4">
-        日付1
-      </h2>
-      <span class="text-h6 mx-sm-3">[ひづけ]◎</span>
-      <v-spacer></v-spacer>
-      <v-chip >N</v-chip>
-    </v-card-title>
+  <v-row>
+    <v-col cols="12" sm="4">
+      <v-sheet rounded="lg" min-height="50">
 
-    <v-card-text>
-        <div class="pa-2 grey lighten-3 black--text rounded-lg"> {{ task.title }}</div> 
-    </v-card-text>
+        <v-data-table id="vt" single-select :value="selected" :headers="headers" :items="tasks"
+          :fixed-header ="true"
+          :footer-props="{
+            'items-per-page-options': [10],
+            'disable-items-per-page': true,
+          }" class="elevation-1" height="70vh" @click:row="rowClick">
+          <template v-slot:item.lvl="{ item }">
 
-    <v-list-item class="text-3">
-        带日期。把制作、提交的年月日写在文件等上面，亦指写上去的年月日。（文書などに，作成・提出の年月日を記すこと。また，その年月日。）
-    </v-list-item>
-    <v-list-item style="margin-top: 4px;" class="text-3">
-        带日期。把制作、提交的年月日写在文件等上面，亦指写上去的年月日。（文書などに，作成・提出の年月日を記すこと。また，その年月日。）
-    </v-list-item>
-       <v-card-actions>
-       
+            <v-chip-group v-model="item.lvl" active-class="deep-purple--text text--accent-4" mandatory @change="ch">
+              <v-chip v-for="(lv, i) in  [0, 1, 2, 9]" :key="i" :value="i" @click="ck(item)">
+                {{ lv }}
+              </v-chip>
+            </v-chip-group>
+          </template>
+        </v-data-table>
 
-    <v-row>
-        <v-col cols="3">
-            <v-btn class="ma-2 small2" outlined fab  color="grey">
-        <v-icon>mdi-arrow-right-bold</v-icon>
-        </v-btn>
-        </v-col>    
-    <v-col cols="9" class="pa-4">
-      <v-range-slider
-        :value="[0, 1]"
-        min="0"
-        max="3"
-        ticks="always"
-        tick-size="4"
-      >
-        
-      </v-range-slider>
+      </v-sheet>
+    </v-col>
+
+    <v-col cols="12" sm="6">
+      <v-sheet min-height="70vh" rounded="lg">
+        <v-card class="mx-auto" max-width="400" height="76vh">
+          <v-card-title>
+            <h2 class="text-h4">
+              {{ task.key }}
+            </h2>
+            <span class="text-h6 mx-sm-3">{{ task.read }}</span>
+            <v-spacer></v-spacer>
+            <v-chip>N</v-chip>
+          </v-card-title>
+
+          <v-card-text style="height: 340px;  max-height:340px;">
+            <div class="pa-2 grey lighten-3 black--text rounded-lg"> {{ task.meaning }}</div>
+            <v-list-item class="text-3 ma-0 pl-1" v-for="(item, i) in task.sample" :key="i">
+              {{ i + 1 }}:{{ item }}
+            </v-list-item>
+          </v-card-text>
+
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-row>
+              <v-col md="3">
+                <v-btn icon @click="btnclick">
+                  <v-icon>{{ icn }}</v-icon>
+                </v-btn>
+
+                <v-btn icon @click="volclick">
+                  <v-icon>{{ vol }}</v-icon>
+                </v-btn>
+              </v-col>
+              <v-col md="6" class="ml-auto">
+                <v-slider v-model="task.lvl" :tick-labels="ticksLabels" :max="3" step="1" ticks="always"
+                  @change="lvlupd('range')" tick-size="4"></v-slider>
+              </v-col>
+            </v-row>
+
+          </v-card-actions>
+        </v-card>
+        <!--  -->
+      </v-sheet>
     </v-col>
   </v-row>
 
-    </v-card-actions>
-  </v-card>
-                <!--  -->
-              </v-sheet>
-            </v-col>
+</template>
   
-            <v-col
-              cols="12"
-              sm="4"
-            >
-              <v-sheet
-                rounded="lg"
-                min-height="50"
-              >
+<script>
+import { throws } from 'assert'
 
-              <v-data-table
-                :headers="headers"
-                :items="tasks"
-                :footer-props="{
-                    'items-per-page-options':[10],
-                    'disable-items-per-page': true,
-                }"
-                class="elevation-1"
-                height="70vh"
-                @click:row="rowClick" 
-            >
-            <template #[`item.id`]="{ item }">
-                <v-radio-group row v-model="item.id"> <!-- 各行でラジオボタンをグループ化 -->
-                <v-layout row justify-center> <!-- ラジオボタンを横1行で表示する -->
-                    <v-radio
-                    v-for="r in radios"
-                    :key="r.id"
-                    :label="r.label"
-                    :value="r.id"
-                    class="my-0 mr-4"
-                    />
-                </v-layout>
-                </v-radio-group>
-            </template>
-        </v-data-table>
+export default {
+  props: {
+    taskId: String
+  },
+  data: function () {
+    return {
+      ticksLabels: ["0", "1", "2", "9"],
+      chipclk: {},
+      selected: [],
+      radios: [
+        { id: 1, label: "l1" },
+        { id: 2, label: "l2" },
+      ],
+      icn: "mdi-arrow-right-bold-circle-outline",
+      vol: "mdi-volume-high",
+      task: {},
+      tasks: [],
+      headers: [
+        { text: "key", value: "key" },
+        { text: "read", value: "read" },
+        { text: "level", value: "lvl", width: 80 }
+      ],
+      intervalId: 0,
+      currentid: 1,
+    }
+  },
+  methods: {
 
-              </v-sheet>
-            </v-col>
-          </v-row>
-
-  </template>
-  
-  <script>
-  export default {
-      props: {
-          taskId: String
-      },
-      data: function () {
-          return {
-            radios: [
-                { id: 1, label: "l1" },
-                { id: 2, label: "l2" },
-            ],
-              task: {},
-              tasks: [],
-              headers : [
-                { text: "id", value: "id" },
-                { text: "Fat (g)", value: "content" }
-                ],
-          }
-      },
-      methods: {
-          getTask() {
-              axios.get('/api/tasks/' + this.taskId)
-                  .then((res) => {
-                      console.log(res);
-                      this.task = res.data;
-                  });
-          },
-
-          getTasks() {
-                axios.get('/api/tasks')
-                    .then((res) => {
-                        this.tasks = res.data;
-                        console.log(tasks);
-                    });
-            },
-        // 第一引数にクリックした行のObjectが渡されるので処理を用意しておく
-        rowClick(data,  row) {
-            this.task= data;
-        },
-      },
-      mounted() {
-          this.getTask();
-          this.getTasks();
+    ck() {
+      console.log("ck");
+      this.chipclk.ck = true;
+    },
+    ch() {
+      console.log("ch");
+      if (this.chipclk.ck) {
+        this.chipclk.ch = true;
       }
+    },
+    volclick() {
+      if (this.vol == "mdi-volume-high") {
+        this.vol = "mdi-volume-mute";
+      } else {
+        this.vol = "mdi-volume-high";
+      }
+      // var wrapper = document.querySelector("#vt > div.v-data-table__wrapper")
+
+      // wrapper.scrollTop = 55;
+
+      
+    },
+
+    lvlupd(event) {
+      console.log("lvlupd");
+      if (this.chipclk.ch || event == "range") {
+        axios.put('/api/contents/' + this.task.idreal, { "lvl": this.task.lvl })
+          .then((res) => {
+            console.log(res.data);
+            this.chipclk.ck = false;
+            this.chipclk.ch = false;
+          });
+      }
+    },
+
+    btnclick() {
+      // ブラウザにWeb Speech API Speech Synthesis機能があるか判定
+
+      if (this.icn == "mdi-arrow-right-bold-circle-outline") {
+
+        var th = this;
+
+        // 発言を設定 (必須)
+        const uttr = new SpeechSynthesisUtterance()
+
+        this.intervalId = setInterval(function () {
+          //console.log(th.tasks);
+          th.task = th.tasks[th.currentid];
+
+          th.selected = [th.tasks[th.currentid]];
+
+          var wrapper = document.querySelector("#vt > div.v-data-table__wrapper");
+
+
+          let wkIndex = th.currentid % 10;
+          if (wkIndex == 0 && th.currentid >= 10) {
+            wrapper.scrollTop = 0;
+            document.querySelector("#vt > div.v-data-footer > div.v-data-footer__icons-after > button").click();
+          }
+          
+          wrapper.scrollTop = (wkIndex - 6) * 55;
+
+
+          if (th.vol == "mdi-volume-high") {
+
+
+
+            // テキストを設定 (必須)
+            uttr.text = th.task.read
+
+            // 言語を設定
+            uttr.lang = "ja-JP"
+
+            // //速度を設定
+            // uttr.rate = 1
+
+            // //高さを設定
+            // uttr.pitch = 1
+
+            // //音量を設定
+            // uttr.volume = 1
+
+            //発言を再生 (必須)
+            window.speechSynthesis.speak(uttr)
+
+          }
+
+
+
+          th.currentid = th.currentid + 1;
+          if (th.currentid >= th.tasks.length) {
+            th.icn = "mdi-arrow-right-bold-circle-outline";
+            clearInterval(th.intervalId);
+
+          }
+
+        }, 1000);
+
+
+
+        this.icn = "mdi-pause-circle";
+      } else {
+        this.icn = "mdi-arrow-right-bold-circle-outline";
+        clearInterval(this.intervalId);
+      }
+
+
+
+      if ('speechSynthesis' in window) {
+
+        // // 発言を設定 (必須)
+        // const uttr = new SpeechSynthesisUtterance()
+
+        // // テキストを設定 (必須)
+        // uttr.text = this.task.title
+
+        // // 言語を設定
+        // uttr.lang = "ja-JP"
+
+        // 速度を設定
+        //uttr.rate = 1
+
+        // 高さを設定
+        //uttr.pitch = 1
+
+        // 音量を設定
+        //uttr.volume = 1
+
+        // 発言を再生 (必須)
+        //window.speechSynthesis.speak(uttr)
+
+
+
+
+
+
+
+      }
+
+      //this.icn = "mdi-pause-circle";
+
+
+    },
+
+    getTasks() {
+      axios.get('/api/contents')
+        .then((res) => {
+          this.tasks = res.data;
+          console.log(this.tasks);
+          this.task = this.tasks[0];
+        });
+    },
+
+    updateL() {
+      axios.put('/api/contents/1', { "lvl": this.task.lvl })
+        .then((res) => {
+          //this.$router.push({name: 'task.list'})
+        });
+    }
+    ,
+    // 第一引数にクリックした行のObjectが渡されるので処理を用意しておく
+    rowClick(data, row) {
+      console.log("rowClick");
+      this.task = data;
+
+      this.currentid = this.tasks.indexOf(this.task);
+
+      row.select(true);
+      if (this.chipclk.ch) {
+        this.lvlupd();
+      }
+    },
+  },
+  mounted() {
+    this.getTasks();
   }
+}
 </script>
-  <style>
+<style>
+.text-3 {
+  color: #3d454c !important;
+  font-size: 14px !important;
+  min-height: 24px;
 
-  .text-3 {
-      color: #3d454c !important;
-      font-size: 14px !important;
+}
 
-  }
-
-  .small2{
+.small2 {
   height: 30px !important;
   font-size: 30px !important;
   width: 30px !important;
 }
 
+.v-slider__tick-label {
+  font-size: 8px;
+}
+
+
+div.v-slide-group__wrapper>div>span {
+  height: 15px !important;
+  width: 15x !important;
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+  font-size: 9px !important;
+
+}
+
+.v-slide-group__content {
+  width: 30px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.v-chip--no-color {
+  color: azure !important;
+  background-color: aliceblue !important;
+}
+
+.v-data-table {
+  white-space : nowrap;
+}
 </style>
