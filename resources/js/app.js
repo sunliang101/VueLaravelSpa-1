@@ -5,6 +5,9 @@ import TaskListComponent from "./components/TaskListComponent";
 import TaskCreateComponent from "./components/TaskCreateComponent";
 import TaskShowComponent from "./components/TaskShowComponent";
 import TaskEditComponent from "./components/TaskEditComponent";
+import ContentsComponent from "./components/ContentsComponent";
+import Cal from "./components/Cal";
+
 import App from './App.vue';
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -23,6 +26,18 @@ Vue.use(Vuetify);
 const router = new VueRouter({
     mode: 'history',
     routes: [
+        {
+            path: '/contents',
+            name: 'contents',
+            component: ContentsComponent
+        },
+
+        {
+            path: '/cal',
+            name: 'cal',
+            component: Cal
+        },
+
         {
             path: '/tasks',
             name: 'task.list',
