@@ -14,6 +14,11 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/contents', 'ContentController@index');
+Route::get('/cal', function() {
+    return response()->json([]);;
+});
+
+Route::get('/cal', 'ContentController@index');
 Route::put('/contents/{content}', 'ContentController@update');
 Route::get('/tasks', 'TaskController@index');
 Route::post('/tasks', 'TaskController@store');
