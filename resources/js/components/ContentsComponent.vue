@@ -3,8 +3,7 @@
     <v-col cols="12" sm="4" class="iphoneHidden">
       <v-sheet rounded="lg" min-height="50">
 
-        <v-data-table id="vt" single-select :value="selected" :headers="headers" :items="tasks"
-          :fixed-header ="true"
+        <v-data-table id="vt" single-select :value="selected" :headers="headers" :items="tasks" :fixed-header="true"
           :footer-props="{
             'items-per-page-options': [10],
             'disable-items-per-page': true,
@@ -34,7 +33,7 @@
             <v-chip>N</v-chip>
           </v-card-title>
 
-          <v-card-text style="height: 340px;  max-height:340px;">
+          <v-card-text style="height: 335px;  max-height:340px;">
             <div class="pa-2 grey lighten-3 black--text rounded-lg"> {{ task.meaning }}</div>
             <v-list-item class="text-3 ma-0 pl-1" v-for="(item, i) in task.sample" :key="i">
               {{ i + 1 }}:{{ item }}
@@ -75,6 +74,7 @@
   
 <script>
 import { throws } from 'assert'
+import { async } from 'q';
 
 export default {
   props: {
@@ -103,6 +103,25 @@ export default {
   },
   methods: {
 
+    // Promiseを使う方法
+    sleepByPromise: function (sec) {
+
+      return new Promise(resolve => setTimeout(resolve, sec * 1000));
+
+    },
+
+    wait: async function (sec) {
+
+      console.log('wait ' + sec.toString() + ' sec right now!');
+
+      // await句を使って、Promiseの非同期処理が完了するまで待機します。
+      await this.sleepByPromise(sec);
+
+      console.log('wait ' + sec.toString() + ' sec done!');
+
+    },
+
+
     ck() {
       console.log("ck");
       this.chipclk.ck = true;
@@ -123,7 +142,7 @@ export default {
 
       // wrapper.scrollTop = 55;
 
-      
+
     },
 
     lvlupd(event) {
@@ -137,26 +156,33 @@ export default {
           });
       }
     },
-    
+
+    // 自動の切り替え
     btnclick() {
 
       if (this.icn == "mdi-arrow-right-bold-circle-outline") {
         this.icn = "mdi-pause-circle";
+        
       }
       else {
         this.icn = "mdi-arrow-right-bold-circle-outline";
+        return;
+        
       }
-
-      this.currentid =0;
       this.doLoop();
 
 
     }
     ,
 
-    btnNxt(b){
-      console.log(this.currentid);
-      if (b !=1 ) this.currentid++;
+    // 次へ
+    btnNxt() {
+
+      if (this.currentid >= this.tasks.length-1) {
+        return;
+      }
+      this.currentid++;
+      console.log("...."+this.currentid);
       this.task = this.tasks[this.currentid];
 
       this.selected = [this.tasks[this.currentid]];
@@ -167,72 +193,63 @@ export default {
       let wkIndex = this.currentid % 10;
       if (wkIndex == 0 && this.currentid >= 10) {
         wrapper.scrollTop = 0;
-        console.log(this.currentid);
-        console.log(this.wkIndex);
         document.querySelector("#vt > div.v-data-footer > div.v-data-footer__icons-after > button").click();
       }
 
       wrapper.scrollTop = (wkIndex - 6) * 55;
     }
-,
-    doLoop() {
-      // ブラウザにWeb Speech API Speech Synthesis機能があるか判定
-
-      console.log(this.currentid);
+    ,
+    async doLoop() {
       if (this.icn == "mdi-pause-circle") {
 
-        // 発言を設定 (必須)
-        const uttr = new SpeechSynthesisUtterance()
+        if (this.vol != "mdi-volume-high" ) {
 
-          
-        this.btnNxt(1);
-
-          if (this.vol == "mdi-volume-high") {
-
-
-
-            // テキストを設定 (必須)
-            uttr.text = this.task.key
-
-            // 言語を設定
-            uttr.lang = "ja-JP"
-
-            // //速度を設定
-            // uttr.rate = 1
-
-            // //高さを設定
-            // uttr.pitch = 1
-
-            // //音量を設定
-            // uttr.volume = 1
-
-            var th = this;
-          uttr.addEventListener('end', (event) => {
-
-            console.log("sun");
-
-            th.currentid = th.currentid + 1;
-              if (th.currentid >= this.tasks.length) {
-                th.icn = "mdi-arrow-right-bold-circle-outline";
-          //      clearInterval(this.intervalId);
-              } else {
-                th.doLoop();
-              }
-
-
-          });
-
-
-            //発言を再生 (必須)
-            window.speechSynthesis.speak(uttr)
-
-            
+          if (this.currentid >= this.tasks.length-1) {
+            this.icn = "mdi-arrow-right-bold-circle-outline";
+            return;
           }
 
+          await this.sleepByPromise(2);
+          this.btnNxt();
+          this.doLoop();
+        } else {
+          // 発言を設定 (必須)
+          const uttr = new SpeechSynthesisUtterance()
 
+          // テキストを設定 (必須)
+          uttr.text = this.task.read.replace(/(①|②|③|④|⑤|◎)/, '').replace(/(①|②|③|④|⑤|◎)/, '');
 
+          // 言語を設定
+          uttr.lang = "ja-JP"
+
+          // //速度を設定
+          // uttr.rate = 1
+
+          // //高さを設定
+          // uttr.pitch = 1
+
+          // //音量を設定
+          // uttr.volume = 1
+
+          var th = this;
+
+          if (this.currentid < this.tasks.length-1) {
+            uttr.addEventListener('end', (event) => {
+            
+            th.btnNxt();
+            th.doLoop();
+            });
+          } else {
+            this.icn = "mdi-arrow-right-bold-circle-outline";
+            //return;
+          }
+
+          
+          //発言を再生 (必須)
+          window.speechSynthesis.speak(uttr)
+        }
       } else {
-       return;
+        return;
       }
 
     },
@@ -311,18 +328,14 @@ div.v-slide-group__wrapper>div>span {
 }
 
 .v-data-table {
-  white-space : nowrap;
+  white-space: nowrap;
 }
 
-@media only screen and (max-width: 450px)
-{ 
+@media only screen and (max-width: 450px) {
   .iphoneHidden {
     display: none !important;
   }
 
 
- }
-
-
-
+}
 </style>

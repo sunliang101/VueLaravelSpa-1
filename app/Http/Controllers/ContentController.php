@@ -11,10 +11,24 @@ class ContentController extends Controller
     //
     public function index()
     {
-
-
         $r = [];
+        Log::debug("12");
+        $cs = Content::all();
+        foreach ($cs as $c) {
+            $wkary = json_decode($c["vue"], true);
+            $wkary["idreal"] =  $c["id"];
+            $r[] = $wkary;
+        }
 
+        
+
+        return  response()->json($r);
+    }
+
+    public function index2(Request $request)
+    {
+        $r = [];
+        Log::debug($request);
         $cs = Content::all();
         foreach ($cs as $c) {
             $wkary = json_decode($c["vue"], true);

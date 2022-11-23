@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,11 +15,12 @@ use Illuminate\Http\Request;
 */
 
 Route::get('/contents', 'ContentController@index');
+Route::get('/contents2','ContentController@index2');
+
 Route::get('/cal', function() {
     return response()->json([]);;
 });
 
-Route::get('/cal', 'ContentController@index');
 Route::put('/contents/{content}', 'ContentController@update');
 Route::get('/tasks', 'TaskController@index');
 Route::post('/tasks', 'TaskController@store');
