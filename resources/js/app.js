@@ -22,17 +22,11 @@ window.Vue = require('vue');
 Vue.use(VueRouter);
 Vue.use(Vuetify);
 
-
 const router = new VueRouter({
     mode: 'history',
     routes: [
         {
-            path: '/contents2',
-            name: 'contents2',
-            component: Cal
-        },
-        {
-            path: '/contents',
+            path: '/contents/',
             name: 'contents',
             component: ContentsComponent
         },

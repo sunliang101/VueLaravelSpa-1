@@ -9,18 +9,28 @@ use Illuminate\Support\Facades\Log;
 class ContentController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
         $r = [];
         Log::debug("12");
+        Log::debug($request["q"]);
+
+        $l = $request["q"];
         $cs = Content::all();
         foreach ($cs as $c) {
             $wkary = json_decode($c["vue"], true);
             $wkary["idreal"] =  $c["id"];
-            $r[] = $wkary;
+
+            if (isset($l)) {
+                if (isset($wkary["lvl"]) && strstr($l, strval($wkary["lvl"])) !== false) {
+                    $r[] = $wkary;
+                }
+            } else {
+                $r[] = $wkary;
+            }
+
         }
 
-        
 
         return  response()->json($r);
     }

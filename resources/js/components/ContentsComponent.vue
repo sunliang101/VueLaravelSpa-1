@@ -11,7 +11,7 @@
           <template v-slot:item.lvl="{ item }">
 
             <v-chip-group v-model="item.lvl" active-class="deep-purple--text text--accent-4" mandatory @change="ch">
-              <v-chip v-for="(lv, i) in  [0, 1, 2, 9]" :key="i" :value="i" @click="ck(item)">
+              <v-chip v-for="(lv, i) in  [0, 1, 2, 3]" :key="i" :value="i" @click="ck(item)">
                 {{ lv }}
               </v-chip>
             </v-chip-group>
@@ -23,7 +23,7 @@
 
     <v-col cols="12" sm="6">
       <v-sheet min-height="70vh" rounded="lg">
-        <v-card class="mx-auto" max-width="400" height="76vh">
+        <v-card class="mx-auto card-outter" max-width="400" height="76vh" >
           <v-card-title>
             <h2 class="text-h4">
               {{ task.key }}
@@ -33,16 +33,17 @@
             <v-chip>N</v-chip>
           </v-card-title>
 
-          <v-card-text style="height: 335px;  max-height:340px;">
+          <v-card-text style="height: calc(80%-40px);">
             <div class="pa-2 grey lighten-3 black--text rounded-lg"> {{ task.meaning }}</div>
             <v-list-item class="text-3 ma-0 pl-1" v-for="(item, i) in task.sample" :key="i">
               {{ i + 1 }}:{{ item }}
             </v-list-item>
           </v-card-text>
 
-          <v-divider></v-divider>
-          <v-card-actions>
-            <v-row>
+         
+          <v-card-actions class="card-actions">
+          
+            <v-row style="height:60px;">
               <v-col md="6">
 
                 <v-btn icon @click="btnNxt">
@@ -82,7 +83,7 @@ export default {
   },
   data: function () {
     return {
-      ticksLabels: ["0", "1", "2", "9"],
+      ticksLabels: ["0", "1", "2", "3"],
       chipclk: {},
       selected: [],
       radios: [
@@ -255,10 +256,10 @@ export default {
     },
 
     getTasks() {
-      axios.get('/api/contents')
+      axios.get('/api/contents', {params: {
+        "q":this.$route.query.type}})
         .then((res) => {
           this.tasks = res.data;
-          console.log(this.tasks);
           this.task = this.tasks[0];
         });
     },
@@ -283,6 +284,7 @@ export default {
       }
     },
   },
+  
   mounted() {
     this.getTasks();
   }
@@ -331,11 +333,21 @@ div.v-slide-group__wrapper>div>span {
   white-space: nowrap;
 }
 
-@media only screen and (max-width: 450px) {
+@media only screen and (max-width: 501px) {
   .iphoneHidden {
     display: none !important;
   }
-
-
 }
+
+.card-outter {
+  position: relative;
+  padding-bottom: 50px;
+}
+.card-actions {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid gainsboro;
+}
+
 </style>
