@@ -1,11 +1,11 @@
 <template>
-
-<v-card class="mx-auto  pa-2" max-width="344">
-  <v-card-text>1254555</v-card-text>
-</v-card>
+<v-row>
+<v-col ><iframe src="https://calendar.google.com/calendar/embed?src=265d26f5728fee4bb40dea01f06530925baedc49db837f9796f13634a0fe4f75%40group.calendar.google.com&ctz=Asia%2FTokyo" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+</v-col>
+<v-col col="4">
   <v-card class="mx-auto v-card--flat pa-2" max-width="344">
     <v-card-text>
-      <v-badge left overlap color="green" :content="content.lvl" :value="content.lvl"></v-badge>
+      <v-badge left overlap v-bind:color="ors[content.lvl]" :content="content.lvl" :value="content.lvl"></v-badge>
       <v-row>
         <v-col class="pa-3 pl-5">{{ content.key }}
 
@@ -55,11 +55,14 @@
 
     </v-card-text>
     <v-card-text v-if="showdetail">
-      1233
-      456
+      难得 (nándé), 罕有地 (hǎnyǒu de)
+      （打消しの語を伴って）非常に頻度の少ないさま。
 
     </v-card-text>
   </v-card>
+</v-col>
+
+</v-row>
 
 </template>
   
@@ -80,9 +83,11 @@ export default {
       nowIndex: 0,
       maxCnt: 0,
       lvl: 2,
-      contents: [{ key: "テスト１", lvl: 1 }, { key: "テスト２", lvl: 2 }, { key: "テスト３", lvl: 3 }, { key: "テスト4", lvl: 3 }, { key: "テスト5", lvl: 3 }, { key: "テスト6", lvl: 3 }],
+      contents: [{ key: "めったに", lvl: 1 }, { key: "テスト２", lvl: 2 }, { key: "テスト３", lvl: 3 }, { key: "テスト4", lvl: 3 }, { key: "テスト5", lvl: 3 }, { key: "テスト6", lvl: 3 }],
       content: {},
       showdetail:false,
+      colors:{0: "grey", 1: "blue", 2: "green", 3: "red"},
+      ors:["grey",  "green",  "blue",  "red"],
 
 
     }
