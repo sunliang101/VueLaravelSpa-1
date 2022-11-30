@@ -88,8 +88,9 @@ export default {
   methods: {
       onKeypressEnter() {
         // 同じページのへの遷移の場合、再描画されない
-        
-        this.$router.push({ name: 'contents', params:{id:this.cond},query: { type: this.cond } })
+
+        //console.log(this.$route.name );
+        this.$router.push({ name: this.$route.name, params:{id:this.cond},query: { type: this.cond } })
       }
 ,
 

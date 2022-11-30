@@ -7,14 +7,13 @@
     <v-card-text>
       <v-badge left overlap v-bind:color="ors[content.lvl]" :content="content.lvl" :value="content.lvl"></v-badge>
       <v-row>
-        <v-col class="pa-3 pl-5">{{ content.key }}
-
-
+        <v-col lg="9" class="pa-3 pl-5"><span class="text-h6">{{ content.key  }}</span> &nbsp; <span v-if="pron" class="grey--text text--accent-2">{{ content.read  }}</span>
         </v-col>
         <V-spacer></V-spacer>
         <v-col lg="3" class="d-flex pa-1">
-
+          <v-badge left overlap offset-x="10" color="grey lighten-5"   class="nownav" v-bind:content="nowIndex +1 +'/' + contents.length"></v-badge>
           <v-btn icon @click="nxtfun">
+            
             <v-icon>{{ stopFlg ? "mdi-chevron-right" : "mdi-stop" }}</v-icon>
           </v-btn>
 
@@ -55,8 +54,11 @@
 
     </v-card-text>
     <v-card-text v-if="showdetail">
-      难得 (nándé), 罕有地 (hǎnyǒu de)
-      （打消しの語を伴って）非常に頻度の少ないさま。
+        <div class="pa-2 grey lighten-3 black--text rounded-lg"> {{ content.meaning }}</div>
+        <v-list-item class="text-3 ma-0 pl-1" v-for="(item, i) in content.sample" :key="i">
+          {{ i + 1 }}:{{ item }}
+        </v-list-item>
+
 
     </v-card-text>
   </v-card>
@@ -83,13 +85,12 @@ export default {
       nowIndex: 0,
       maxCnt: 0,
       lvl: 2,
-      contents: [{ key: "めったに", lvl: 1 }, { key: "テスト２", lvl: 2 }, { key: "テスト３", lvl: 3 }, { key: "テスト4", lvl: 3 }, { key: "テスト5", lvl: 3 }, { key: "テスト6", lvl: 3 }],
+      contents: [],
       content: {},
       showdetail:false,
       colors:{0: "grey", 1: "blue", 2: "green", 3: "red"},
       ors:["grey",  "green",  "blue",  "red"],
-
-
+      preFlg:false,
     }
   },
   methods: {
@@ -140,7 +141,7 @@ export default {
         const uttr = new SpeechSynthesisUtterance()
 
         // テキストを設定 (必須)
-        uttr.text = this.content.key.replace(/(①|②|③|④|⑤|◎)/, '').replace(/(①|②|③|④|⑤|◎)/, '');
+        uttr.text = this.content.read.replace(/(①|②|③|④|⑤|◎)/, '').replace(/(①|②|③|④|⑤|◎)/, '');
 
         // 言語を設定
         uttr.lang = "ja-JP"
@@ -194,13 +195,25 @@ export default {
         return false;
       }
       console.log("moveNext" + this.nowIndex);
-      this.nowIndex++;
+
+      if (this.preFlg) {
+        this.nowIndex--;
+        this.preFlg = false;
+      } else {
+        this.nowIndex++;
+      }
+      
       if (this.nowIndex > this.contents.length - 1) {
         this.stopFlg = true;
         console.log(this.stopFlg);
         this.nowIndex--;
         return false;
+      } else if (this.nowIndex < 0){
+        this.nowIndex++;
+        return false;
       }
+
+
       this.content = this.contents[this.nowIndex];
 
       return true;
@@ -219,16 +232,43 @@ export default {
         //}
       } else if ( event.key >= 0 && event.key <=3 ) {
         this.content.lvl = event.key;
+        this.lvlupd();
       } else if (event.keyCode === 17) {
         this.showdetail = !this.showdetail;
+      } else if (event.keyCode === 39 || event.keyCode === 40) {
+        this.doLoop = false;
+        this.nxtfun();
+      } else if (event.keyCode === 37 || event.keyCode === 38) {
+        this.doLoop = false;
+        this.preFlg = true;
+        this.nxtfun();
       }
       
 
     }
+    ,
+    getCotents() {
+      axios.get('/api/contents', {params: {
+        "q":this.$route.query.type}})
+        .then((res) => {
+          this.contents = res.data;
+          this.content = this.contents[0];
+        });
+    },
+
+    lvlupd() {
+      console.log("lvlupd");
+        axios.put('/api/contents/' + this.content.idreal, { "lvl": this.content.lvl })
+          .then((res) => {
+            console.log(res.data);
+          });
+      }
+
 
   },
   mounted() {
-    this.content = this.contents[this.nowIndex];
+    // this.content = this.contents[this.nowIndex];
+    this.getCotents();
     document.addEventListener('keydown', this.onKeyDown)
   }
 
@@ -241,5 +281,11 @@ export default {
   position: absolute;
   width: 100%;
 }
+
+.nownav > span > span 
+{
+ color: grey !important;
+}
+
 </style>
 
