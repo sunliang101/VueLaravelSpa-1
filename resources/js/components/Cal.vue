@@ -91,6 +91,7 @@ export default {
       colors:{0: "grey", 1: "blue", 2: "green", 3: "red"},
       ors:["grey",  "green",  "blue",  "red"],
       preFlg:false,
+      refArr:[],
     }
   },
   methods: {
@@ -215,6 +216,7 @@ export default {
 
 
       this.content = this.contents[this.nowIndex];
+      this.refArr.push(this.content.idreal);
 
       return true;
 
@@ -253,6 +255,7 @@ export default {
         .then((res) => {
           this.contents = res.data;
           this.content = this.contents[0];
+          this.refArr.push(this.content.idreal);
         });
     },
 
@@ -263,13 +266,19 @@ export default {
             console.log(res.data);
           });
       }
+      ,
+      leaving() {
+        console.log('leave');
+        console.log(this.refArr);
+      }
 
 
   },
   mounted() {
     // this.content = this.contents[this.nowIndex];
     this.getCotents();
-    document.addEventListener('keydown', this.onKeyDown)
+    document.addEventListener('keydown', this.onKeyDown);
+    window.addEventListener("beforeunload", this.leaving);
   }
 
 }
