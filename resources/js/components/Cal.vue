@@ -270,6 +270,29 @@ export default {
       leaving() {
         console.log('leave');
         console.log(this.refArr);
+        // this.refArr.push("1");
+        // this.refArr.push("2");
+        // this.refArr.push("1");
+        
+
+        let set = new Set(this.refArr);
+        let paraArr = [];
+        for (const elem of set) {
+          var da = {};
+          da["uid"] ="sun";
+          da["logickey"] =elem;
+          
+          paraArr.push(da);
+          
+        }
+
+        console.log(paraArr);
+
+        axios.post('/api/actionhiss', paraArr)
+                    .then((res) => {
+                        //this.$router.push({name: 'task.list'});
+                    });
+
       }
 
 
@@ -277,6 +300,7 @@ export default {
   mounted() {
     // this.content = this.contents[this.nowIndex];
     this.getCotents();
+    //this.leaving();
     document.addEventListener('keydown', this.onKeyDown);
     window.addEventListener("beforeunload", this.leaving);
   }

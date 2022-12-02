@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\ActionHis;
 use App\Content;
 use App\UpdHis;
 use Illuminate\Http\Request;
@@ -41,22 +42,29 @@ class ContentController extends Controller
             }
             $paraAry[$k] = $v;
         }
-        
+        Log::debug("<><><>");
         Log::debug($paraAry);
 
-        // DB::table('users')
-        //         ->when($role, function ($query, $role) {
-        //             return $query->where('role_id', $role);
-        //         })
-        //         ->get();
         $category = isset($paraAry["category"]) ? $paraAry["category"]: "";
-        $cs = Content::when($category, function ($query, $category) {
-                        return $query->where('category', $category);
-                    })
-                    ->get();
-        Log::debug(count($cs));
+        $days = isset($paraAry["d"]) ? $paraAry["d"]: "";
+        $cs =[];
 
-        $cnt = 0;
+        if (isset($days)) {
+
+            $cSrch = ActionHis::Where('updated_at', '>=', date("Y-m-d",strtotime("-" . $days . " day")))->get();
+           
+            foreach ($cSrch as $c) {
+                $cs[]=$c->content;
+            }
+            $cs = array_unique($cs);
+        } else {
+            //　検索条件
+            $cs = Content::when($category, function ($query, $category) {
+                return $query->where('category', $category);
+            })->get();
+        }
+
+        //　検索語の絞り込み
         foreach ($cs as $c) {
             $wkary = json_decode($c["vue"], true);
             $wkary["idreal"] =  $c["id"];
@@ -74,11 +82,14 @@ class ContentController extends Controller
         }
 
         //　ページの範囲
-        $from  = isset($paraAry["p"]) ? explode(",", $paraAry["p"])[0]-1:0;
-        $getCnt  = isset(explode(",", $paraAry["p"])[1]) ? explode(",", $paraAry["p"])[1]:count($r) - $from;
-        $r = array_slice($r, $from, $getCnt);
-
-        
+        if ( isset($paraAry["p"])) {
+            $from = 0;
+            $from  =  explode(",", $paraAry["p"])[0]-1;
+            $getCnt  = isset(explode(",", $paraAry["p"])[1]) ? explode(",", $paraAry["p"])[1]:count($r) - $from;
+            if ($from >0) {
+                $r = array_slice($r, $from, $getCnt);
+            }
+        }
 
 
         return  response()->json($r);
