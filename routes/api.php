@@ -28,3 +28,7 @@ Route::get('/tasks/{task}', 'TaskController@show');
 Route::put('/tasks/{task}', 'TaskController@update');
 Route::delete('/tasks/{task}', 'TaskController@destroy');
 
+
+Route::resource('actionhiss', ActionHisController::class);
+
+

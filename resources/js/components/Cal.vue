@@ -91,6 +91,7 @@ export default {
       colors:{0: "grey", 1: "blue", 2: "green", 3: "red"},
       ors:["grey",  "green",  "blue",  "red"],
       preFlg:false,
+      refArr:[],
     }
   },
   methods: {
@@ -215,6 +216,7 @@ export default {
 
 
       this.content = this.contents[this.nowIndex];
+      this.refArr.push(this.content.idreal);
 
       return true;
 
@@ -259,6 +261,8 @@ export default {
           this.contents = res.data;
           this.nowIndex = 0;
           this.content = this.contents[this.nowIndex];
+          this.refArr.push(this.content.idreal);
+        
         });
     },
 
@@ -269,15 +273,44 @@ export default {
             console.log(res.data);
           });
       }
+      ,
+      leaving() {
+        console.log('leave');
+        console.log(this.refArr);
+        // this.refArr.push("1");
+        // this.refArr.push("2");
+        // this.refArr.push("1");
+        
+
+        let set = new Set(this.refArr);
+        let paraArr = [];
+        for (const elem of set) {
+          var da = {};
+          da["uid"] ="sun";
+          da["logickey"] =elem;
+          
+          paraArr.push(da);
+          
+        }
+
+        console.log(paraArr);
+
+        axios.post('/api/actionhiss', paraArr)
+                    .then((res) => {
+                        //this.$router.push({name: 'task.list'});
+                    });
+
+      }
 
 
   },
   mounted() {
     // this.content = this.contents[this.nowIndex];
-    this.getCotents({});
-//    document.addEventListener('keydown', this.onKeyDown)
+    this.getCotents();
+    window.addEventListener("beforeunload", this.leaving);
+    
+    document.querySelector("#app > div > main > div > div > div > div.wordcard.col").addEventListener('keydown', this.onKeyDown);
 
-document.querySelector("#app > div > main > div > div > div > div.wordcard.col").addEventListener('keydown', this.onKeyDown);
   }
 
 }
