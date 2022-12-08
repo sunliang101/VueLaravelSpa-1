@@ -52,7 +52,7 @@
     <!-- メイン -->
     <v-main>
       <v-container fluid>
-        <RouterView />
+        <RouterView ref="view" ></RouterView>
       </v-container>
     </v-main>
 
@@ -92,10 +92,15 @@ export default {
 
   methods: {
       onKeypressEnter() {
+
+        var p = {params: {
+        "q":this.cond}}
+
+        this.$refs.view.myMethod(p);
         // 同じページのへの遷移の場合、再描画されない
 
         //console.log(this.$route.name );
-        this.$router.push({ name: this.$route.name, params:{id:this.cond},query: { type: this.cond } })
+        //this.$router.push({ name: this.$route.name, params:{id:this.cond},query: { type: this.cond } })
       }
 ,
 

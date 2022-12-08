@@ -11,6 +11,7 @@
     },
     "devDependencies": {
         "@mdi/font": "^7.0.96",
+        "@nuxtjs/vuetify": "^1.12.3",
         "axios": "^0.19",
         "bootstrap": "^4.0.0",
         "cross-env": "^5.1",
@@ -22,8 +23,8 @@
         "resolve-url-loader": "2.3.1",
         "sass": "~1.32",
         "sass-loader": "^7.3.1",
-        "vue": "^2.5.17",
-        "vue-template-compiler": "^2.6.10"
+        "vue": "^2.7.14",
+        "vue-template-compiler": "^2.7.14"
     },
     "dependencies": {
         "vue-js-modal": "^2.0.1",

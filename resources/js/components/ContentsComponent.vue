@@ -264,6 +264,10 @@ export default {
         });
     },
 
+    myMethod(){
+      alert(123);
+    },
+
     updateL() {
       axios.put('/api/contents/1', { "lvl": this.task.lvl })
         .then((res) => {

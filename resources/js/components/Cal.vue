@@ -2,7 +2,7 @@
 <v-row>
 <v-col ><iframe src="https://calendar.google.com/calendar/embed?src=265d26f5728fee4bb40dea01f06530925baedc49db837f9796f13634a0fe4f75%40group.calendar.google.com&ctz=Asia%2FTokyo" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
 </v-col>
-<v-col col="4">
+<v-col col="4" class="wordcard" tabIndex="0">
   <v-card class="mx-auto v-card--flat pa-2" max-width="344">
     <v-card-text>
       <v-badge left overlap v-bind:color="ors[content.lvl]" :content="content.lvl" :value="content.lvl"></v-badge>
@@ -223,8 +223,13 @@ export default {
     }
 
     ,
+    myMethod(p){
+      this.getCotents(p);
+    }
+
+    ,
     onKeyDown(event) {
-      console.log(event.keyCode);
+      console.log(event);
       console.log(event.key);
       
       if (event.keyCode === 32) {
@@ -249,13 +254,15 @@ export default {
 
     }
     ,
-    getCotents() {
-      axios.get('/api/contents', {params: {
-        "q":this.$route.query.type}})
+    getCotents(p) {
+      console.log(p);
+      axios.get('/api/contents', p)
         .then((res) => {
           this.contents = res.data;
-          this.content = this.contents[0];
+          this.nowIndex = 0;
+          this.content = this.contents[this.nowIndex];
           this.refArr.push(this.content.idreal);
+        
         });
     },
 
@@ -300,9 +307,10 @@ export default {
   mounted() {
     // this.content = this.contents[this.nowIndex];
     this.getCotents();
-    //this.leaving();
-    document.addEventListener('keydown', this.onKeyDown);
     window.addEventListener("beforeunload", this.leaving);
+    
+    document.querySelector("#app > div > main > div > div > div > div.wordcard.col").addEventListener('keydown', this.onKeyDown);
+
   }
 
 }
@@ -318,6 +326,10 @@ export default {
 .nownav > span > span 
 {
  color: grey !important;
+}
+
+.wordcard {
+  outline: none;
 }
 
 </style>
