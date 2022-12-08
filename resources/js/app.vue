@@ -11,7 +11,12 @@
 
           <v-list-item router :to="{ name: 'cal' }">
             <v-list-item-title>cal</v-list-item-title>
+             
           </v-list-item>
+
+          <router-link v-bind:to="{name: 'cal'}">
+                <button class="btn btn-success">Edit</button>
+            </router-link>
 
         </v-list-item-group>
       </v-list>
@@ -77,7 +82,7 @@ export default {
 
   watch: {
     $route(to, from) {
-      location.reload()
+      //location.reload()
     }
   },
 

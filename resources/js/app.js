@@ -7,6 +7,8 @@ import TaskShowComponent from "./components/TaskShowComponent";
 import TaskEditComponent from "./components/TaskEditComponent";
 import ContentsComponent from "./components/ContentsComponent";
 import Cal from "./components/Cal";
+import form from "./components/form";
+import list from "./components/list";
 
 import App from './App.vue';
 /**
@@ -35,6 +37,20 @@ const router = new VueRouter({
             path: '/cal',
             name: 'cal',
             component: Cal
+        },
+
+        
+        {
+            path: '/form',
+            name: 'form',
+            component: form,
+            props:true
+        },
+
+        {
+            path: '/list',
+            name: 'list',
+            component: list
         },
 
         {
