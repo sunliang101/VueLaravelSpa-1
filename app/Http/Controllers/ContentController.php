@@ -49,7 +49,7 @@ class ContentController extends Controller
         $days = isset($paraAry["d"]) ? $paraAry["d"]: "";
         $cs =[];
 
-        if (isset($days)) {
+        if (isset($days)&& !empty($days)) {
 
             $cSrch = ActionHis::Where('updated_at', '>=', date("Y-m-d",strtotime("-" . $days . " day")))->get();
            

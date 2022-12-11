@@ -9,6 +9,7 @@ import ContentsComponent from "./components/ContentsComponent";
 import Cal from "./components/Cal";
 import form from "./components/form";
 import list from "./components/list";
+import list2 from "./components/list2";
 
 import App from './App.vue';
 /**
@@ -51,6 +52,12 @@ const router = new VueRouter({
             path: '/list',
             name: 'list',
             component: list
+        },
+
+        {
+            path: '/list2',
+            name: 'list2',
+            component: list2
         },
 
         {
