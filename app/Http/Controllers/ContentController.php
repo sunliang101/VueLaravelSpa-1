@@ -52,8 +52,6 @@ class ContentController extends Controller
         $cs = [];
 
         if (!empty($days)) {
-            Log::debug("<><><>11");
-
             $cSrch = ActionHis::Where('updated_at', '>=', date("Y-m-d", strtotime("-" . $days . " day")))->get();
 
             foreach ($cSrch as $c) {

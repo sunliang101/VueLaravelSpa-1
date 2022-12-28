@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h2>詳細画面</h2>
+        <h3>詳細画面</h3>
 
         <v-form ref="form" v-model="valid">
             <v-container style="max-width:100%;">
@@ -10,7 +10,7 @@
                             :rules="[rules.required, rules.max_16]"></v-text-field>
                     </v-col>
 
-                    <v-col cols="3">
+                    <v-col cols="9">
                         <v-container>
                             <v-row>
                                 <div :class="errors.checkbox ? `theme--light v-label error--text` : `theme--light v-label`"
@@ -32,7 +32,7 @@
 
 
 
-                    <v-col cols="6">
+                    <v-col cols="9" class="text-left">
                         <v-container>
                             <v-row>
                                 <div :class="errors.checkbox ? `theme--light v-label error--text` : `theme--light v-label`"
@@ -47,16 +47,13 @@
                             </div>
                         </v-container>
                     </v-col>
-                    <v-col cols="6">
-                    </v-col>
-
                     <v-col cols="3">
                         <v-textarea counter label="Text" :rules="rules" :value="value" rows="2"></v-textarea>
                     </v-col>
                     <v-col cols="9">
                     </v-col>
 
-                    <v-col cols="1">
+                    <v-col cols="2">
                         <v-text-field v-model="inputDate" type="date" label="入社日－開始" hide-details />
                     </v-col>
 
