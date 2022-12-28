@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Log;
 |
 */
 
+Route::post('/login', 'Auth\LoginController@authenticate');
+
+
 Route::get('/contents', 'ContentController@index');
 Route::get('/contents2','ContentController@index2');
 

@@ -1,70 +1,74 @@
 <template>
-<v-row>
-<v-col ><iframe src="https://calendar.google.com/calendar/embed?src=265d26f5728fee4bb40dea01f06530925baedc49db837f9796f13634a0fe4f75%40group.calendar.google.com&ctz=Asia%2FTokyo" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
-</v-col>
-<v-col col="4" class="wordcard" tabIndex="0">
-  <v-card class="mx-auto v-card--flat pa-2" max-width="344">
-    <v-card-text>
-      <v-badge left overlap v-bind:color="ors[content.lvl]" :content="content.lvl" :value="content.lvl"></v-badge>
-      <v-row>
-        <v-col lg="9" class="pa-3 pl-5"><span class="text-h6">{{ content.key  }}</span> &nbsp; <span v-if="pron" class="grey--text text--accent-2">{{ content.read  }}</span>
-        </v-col>
-        <V-spacer></V-spacer>
-        <v-col lg="3" class="d-flex pa-1">
-          <v-badge left overlap offset-x="10" color="grey lighten-5"   class="nownav" v-bind:content="nowIndex +1 +'/' + contents.length"></v-badge>
-          <v-btn icon @click="nxtfun">
-            
-            <v-icon>{{ stopFlg ? "mdi-chevron-right" : "mdi-stop" }}</v-icon>
-          </v-btn>
+  <v-row>
+    <v-col><iframe
+        src="https://calendar.google.com/calendar/embed?src=265d26f5728fee4bb40dea01f06530925baedc49db837f9796f13634a0fe4f75%40group.calendar.google.com&ctz=Asia%2FTokyo"
+        style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+    </v-col>
+    <v-col col="4" class="wordcard" tabIndex="0">
+      <v-card class="mx-auto v-card--flat pa-2" max-width="344">
+        <v-card-text>
+          <v-badge left overlap v-bind:color="ors[content.lvl]" :content="content.lvl" :value="content.lvl"></v-badge>
+          <v-row>
+            <v-col lg="9" class="pa-3 pl-5"><span class="text-h6">{{ content.key }}</span> &nbsp; <span v-if="pron"
+                class="grey--text text--accent-2">{{ content.read }}</span>
+            </v-col>
+            <V-spacer></V-spacer>
+            <v-col lg="3" class="d-flex pa-1">
+              <v-badge left overlap offset-x="10" color="grey lighten-5" class="nownav"
+                v-bind:content="nowIndex + 1 + '/' + contents.length"></v-badge>
+              <v-btn icon @click="nxtfun">
 
-          <div class="text-center">
-            <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn icon v-bind="attrs" v-on="on">
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
+                <v-icon>{{ stopFlg ? "mdi-chevron-right" : "mdi-stop" }}</v-icon>
+              </v-btn>
 
-              <v-card>
-                <v-list>
-                  <v-list-item>
-                    <v-list-item-action>
-                      <v-switch v-model="loop" color="purple"></v-switch>
-                    </v-list-item-action>
-                    <v-list-item-title>loop</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-action>
-                      <v-switch v-model="sound" color="purple"></v-switch>
-                    </v-list-item-action>
-                    <v-list-item-title>sound</v-list-item-title>
-                  </v-list-item>
-                  <v-list-item>
-                    <v-list-item-action>
-                      <v-switch v-model="pron" color="purple"></v-switch>
-                    </v-list-item-action>
-                    <v-list-item-title>pronunciation</v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-card>
-            </v-menu>
-          </div>
-        </v-col>
-      </v-row>
+              <div class="text-center">
+                <v-menu v-model="menu" :close-on-content-click="false" :nudge-width="200" offset-x>
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn icon v-bind="attrs" v-on="on">
+                      <v-icon>mdi-dots-vertical</v-icon>
+                    </v-btn>
+                  </template>
 
-    </v-card-text>
-    <v-card-text v-if="showdetail">
-        <div class="pa-2 grey lighten-3 black--text rounded-lg"> {{ content.meaning }}</div>
-        <v-list-item class="text-3 ma-0 pl-1" v-for="(item, i) in content.sample" :key="i">
-          {{ i + 1 }}:{{ item }}
-        </v-list-item>
+                  <v-card>
+                    <v-list>
+                      <v-list-item>
+                        <v-list-item-action>
+                          <v-switch v-model="loop" color="purple"></v-switch>
+                        </v-list-item-action>
+                        <v-list-item-title>loop</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-action>
+                          <v-switch v-model="sound" color="purple"></v-switch>
+                        </v-list-item-action>
+                        <v-list-item-title>sound</v-list-item-title>
+                      </v-list-item>
+                      <v-list-item>
+                        <v-list-item-action>
+                          <v-switch v-model="pron" color="purple"></v-switch>
+                        </v-list-item-action>
+                        <v-list-item-title>pronunciation</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-card>
+                </v-menu>
+              </div>
+            </v-col>
+          </v-row>
+
+        </v-card-text>
+        <v-card-text v-if="showdetail">
+          <div class="pa-2 grey lighten-3 black--text rounded-lg"> <v-icon @click="speak">mdi-volume-high</v-icon>{{ content.meaning }}</div>
+          <v-list-item class="text-3 ma-0 pl-1" v-for="(item, i) in content.sample" :key="i">
+            {{ i + 1 }}:{{ item }}
+          </v-list-item>
 
 
-    </v-card-text>
-  </v-card>
-</v-col>
+        </v-card-text>
+      </v-card>
+    </v-col>
 
-</v-row>
+  </v-row>
 
 </template>
   
@@ -87,11 +91,11 @@ export default {
       lvl: 2,
       contents: [],
       content: {},
-      showdetail:false,
-      colors:{0: "grey", 1: "blue", 2: "green", 3: "red"},
-      ors:["grey",  "green",  "blue",  "red"],
-      preFlg:false,
-      refArr:[],
+      showdetail: false,
+      colors: { 0: "grey", 1: "blue", 2: "green", 3: "red" },
+      ors: ["grey", "green", "blue", "red"],
+      preFlg: false,
+      refArr: [],
     }
   },
   methods: {
@@ -103,6 +107,42 @@ export default {
 
     },
 
+    speak(flg, loopFlg) {
+       // 発言を設定 (必須)
+       const uttr = new SpeechSynthesisUtterance()
+
+      // テキストを設定 (必須)
+      uttr.text = this.content.read.replace(/(①|②|③|④|⑤|◎)/, '').replace(/(①|②|③|④|⑤|◎)/, '');
+
+      // 言語を設定
+      uttr.lang = "ja-JP"
+
+      // //速度を設定
+      // uttr.rate = 1
+
+      // //高さを設定
+      // uttr.pitch = 1
+
+      // //音量を設定
+      // uttr.volume = 1
+      console.log(this.nowIndex);
+
+      if (flg==1) {
+      var th = this;
+        if (loopFlg) {
+          uttr.addEventListener('end', (event) => {
+            if (!th.moveNext()) {
+              return;
+            }
+            th.doSoundLoop(true);
+          });
+        }
+      }
+
+      //発言を再生 (必須)
+      window.speechSynthesis.speak(uttr)
+    }
+,
     nxtfun() {
       console.log(this.loop);
 
@@ -138,40 +178,7 @@ export default {
 
       if (this.sound) {
 
-        // 発言を設定 (必須)
-        const uttr = new SpeechSynthesisUtterance()
-
-        // テキストを設定 (必須)
-        uttr.text = this.content.read.replace(/(①|②|③|④|⑤|◎)/, '').replace(/(①|②|③|④|⑤|◎)/, '');
-
-        // 言語を設定
-        uttr.lang = "ja-JP"
-
-        // //速度を設定
-        // uttr.rate = 1
-
-        // //高さを設定
-        // uttr.pitch = 1
-
-        // //音量を設定
-        // uttr.volume = 1
-        console.log(this.nowIndex);
-        var th = this;
-
-        console.log(loopFlg);
-        if (loopFlg) {
-          uttr.addEventListener('end', (event) => {
-
-            if (!th.moveNext()) {
-              return;
-            }
-            th.doSoundLoop(true);
-          });
-        }
-
-        //発言を再生 (必須)
-        window.speechSynthesis.speak(uttr)
-
+        this.speak(1, loopFlg)
       }
 
 
@@ -192,7 +199,7 @@ export default {
     ,
     moveNext(step) {
 
-      if (this.stopFlg == true && step !==1 ) {
+      if (this.stopFlg == true && step !== 1) {
         return false;
       }
       console.log("moveNext" + this.nowIndex);
@@ -203,13 +210,13 @@ export default {
       } else {
         this.nowIndex++;
       }
-      
+
       if (this.nowIndex > this.contents.length - 1) {
         this.stopFlg = true;
         console.log(this.stopFlg);
         this.nowIndex--;
         return false;
-      } else if (this.nowIndex < 0){
+      } else if (this.nowIndex < 0) {
         this.nowIndex++;
         return false;
       }
@@ -223,7 +230,7 @@ export default {
     }
 
     ,
-    myMethod(p){
+    myMethod(p) {
       this.getCotents(p);
     }
 
@@ -231,13 +238,13 @@ export default {
     onKeyDown(event) {
       console.log(event);
       console.log(event.key);
-      
+
       if (event.keyCode === 32) {
         //this.stopFlg = !this.stopFlg;
         //if (this.stopFlg === false) {
-          this.nxtfun();
+        this.nxtfun();
         //}
-      } else if ( event.key >= 0 && event.key <=3 ) {
+      } else if (event.key >= 0 && event.key <= 3) {
         this.content.lvl = event.key;
         this.lvlupd();
       } else if (event.keyCode === 17) {
@@ -250,7 +257,7 @@ export default {
         this.preFlg = true;
         this.nxtfun();
       }
-      
+
 
     }
     ,
@@ -262,45 +269,45 @@ export default {
           this.nowIndex = 0;
           this.content = this.contents[this.nowIndex];
           this.refArr.push(this.content.idreal);
-        
+
         });
     },
 
     lvlupd() {
       console.log("lvlupd");
-        axios.put('/api/contents/' + this.content.idreal, { "lvl": this.content.lvl })
-          .then((res) => {
-            console.log(res.data);
-          });
-      }
-      ,
-      leaving() {
-        console.log('leave');
-        console.log(this.refArr);
-        // this.refArr.push("1");
-        // this.refArr.push("2");
-        // this.refArr.push("1");
-        
+      axios.put('/api/contents/' + this.content.idreal, { "lvl": this.content.lvl })
+        .then((res) => {
+          console.log(res.data);
+        });
+    }
+    ,
+    leaving() {
+      console.log('leave');
+      console.log(this.refArr);
+      // this.refArr.push("1");
+      // this.refArr.push("2");
+      // this.refArr.push("1");
 
-        let set = new Set(this.refArr);
-        let paraArr = [];
-        for (const elem of set) {
-          var da = {};
-          da["uid"] ="sun";
-          da["logickey"] =elem;
-          
-          paraArr.push(da);
-          
-        }
 
-        console.log(paraArr);
+      let set = new Set(this.refArr);
+      let paraArr = [];
+      for (const elem of set) {
+        var da = {};
+        da["uid"] = "sun";
+        da["logickey"] = elem;
 
-        axios.post('/api/actionhiss', paraArr)
-                    .then((res) => {
-                        //this.$router.push({name: 'task.list'});
-                    });
+        paraArr.push(da);
 
       }
+
+      console.log(paraArr);
+
+      axios.post('/api/actionhiss', paraArr)
+        .then((res) => {
+          //this.$router.push({name: 'task.list'});
+        });
+
+    }
 
 
   },
@@ -308,7 +315,7 @@ export default {
     // this.content = this.contents[this.nowIndex];
     this.getCotents();
     window.addEventListener("beforeunload", this.leaving);
-    
+
     document.querySelector("#app > div > main > div > div > div > div.wordcard.col").addEventListener('keydown', this.onKeyDown);
 
   }
@@ -323,14 +330,12 @@ export default {
   width: 100%;
 }
 
-.nownav > span > span 
-{
- color: grey !important;
+.nownav>span>span {
+  color: grey !important;
 }
 
 .wordcard {
   outline: none;
 }
-
 </style>
 

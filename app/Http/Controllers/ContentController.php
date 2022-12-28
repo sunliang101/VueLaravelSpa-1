@@ -20,44 +20,48 @@ class ContentController extends Controller
         Log::debug($request["q"]);
 
         $l = $request["q"];
-        $para = explode(" ", $l);
-        
-
         $paraAry = [];
-        foreach ($para as $p) {
 
-            $pary =  explode(":", $p);
-            if  (count($pary) !== 2) {
-                continue;
+        if (!empty($l)) {
+            $para = explode(" ", $l);
+
+            foreach ($para as $p) {
+
+                $pary =  explode(":", $p);
+                if (count($pary) !== 2) {
+                    continue;
+                }
+                $k = trim($pary[0]);
+                $v = trim($pary[1]);
+                switch ($k) {
+                    case "c":
+                        $k = "category";
+                        break;
+                    case "l":
+                        $k = "lvl";
+                        break;
+                }
+                $paraAry[$k] = $v;
             }
-            $k = trim($pary[0]);
-            $v = trim($pary[1]);
-            switch ($k) {
-                case "c":
-                    $k = "category";
-                    break;
-                case "l":
-                    $k = "lvl";
-                    break;
-            }
-            $paraAry[$k] = $v;
         }
-        Log::debug("<><><>");
+       
         Log::debug($paraAry);
 
-        $category = isset($paraAry["category"]) ? $paraAry["category"]: "";
-        $days = isset($paraAry["d"]) ? $paraAry["d"]: "";
-        $cs =[];
+        $category = isset($paraAry["category"]) ? $paraAry["category"] : "";
+        $days = isset($paraAry["d"]) ? $paraAry["d"] : "";
+        $cs = [];
 
-        if (isset($days)) {
+        if (!empty($days)) {
+            Log::debug("<><><>11");
 
-            $cSrch = ActionHis::Where('updated_at', '>=', date("Y-m-d",strtotime("-" . $days . " day")))->get();
-           
+            $cSrch = ActionHis::Where('updated_at', '>=', date("Y-m-d", strtotime("-" . $days . " day")))->get();
+
             foreach ($cSrch as $c) {
-                $cs[]=$c->content;
+                $cs[] = $c->content;
             }
             $cs = array_unique($cs);
         } else {
+            Log::debug("<><><>22");
             //　検索条件
             $cs = Content::when($category, function ($query, $category) {
                 return $query->where('category', $category);
@@ -68,7 +72,7 @@ class ContentController extends Controller
         foreach ($cs as $c) {
             $wkary = json_decode($c["vue"], true);
             $wkary["idreal"] =  $c["id"];
-            if (Empty($wkary["lvl"])) {
+            if (empty($wkary["lvl"])) {
                 $wkary["lvl"] = 3;
             }
 
@@ -82,11 +86,11 @@ class ContentController extends Controller
         }
 
         //　ページの範囲
-        if ( isset($paraAry["p"])) {
+        if (isset($paraAry["p"])) {
             $from = 0;
-            $from  =  explode(",", $paraAry["p"])[0]-1;
-            $getCnt  = isset(explode(",", $paraAry["p"])[1]) ? explode(",", $paraAry["p"])[1]:count($r) - $from;
-            if ($from >0) {
+            $from  =  explode(",", $paraAry["p"])[0] - 1;
+            $getCnt  = isset(explode(",", $paraAry["p"])[1]) ? explode(",", $paraAry["p"])[1] : count($r) - $from;
+            if ($from > 0) {
                 $r = array_slice($r, $from, $getCnt);
             }
         }
@@ -120,24 +124,23 @@ class ContentController extends Controller
 
         $s = [];
         $s["vue"] = json_encode($wkary);
-        $after = $s["vue"] ;
+        $after = $s["vue"];
 
-        $Content->update( $s);
+        $Content->update($s);
 
         UpdHis::create(
             [
-                "uid"=>"sun",
-                "target"=>"Content",
-            "logickey"=>$Content["id"],
-            "before"=>$before,
-            "after"=>$after, 
-            "ext"=>'', 
-                    
+                "uid" => "sun",
+                "target" => "Content",
+                "logickey" => $Content["id"],
+                "before" => $before,
+                "after" => $after,
+                "ext" => '',
+
             ]
 
         );
 
         return $Content;
     }
-
 }
