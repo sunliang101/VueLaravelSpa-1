@@ -1,8 +1,11 @@
 <template>
   <v-row>
-    <v-col><iframe
+    <v-col>
+      <iframe
         src="https://calendar.google.com/calendar/embed?src=265d26f5728fee4bb40dea01f06530925baedc49db837f9796f13634a0fe4f75%40group.calendar.google.com&ctz=Asia%2FTokyo"
         style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>
+        <br>
+        ※c: l: d: p:100,50　カテゴリ、レベル、ページ
     </v-col>
     <v-col col="4" class="wordcard" tabIndex="0">
       <v-card class="mx-auto v-card--flat pa-2" max-width="344">

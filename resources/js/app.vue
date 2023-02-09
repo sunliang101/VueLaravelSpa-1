@@ -14,10 +14,6 @@
 
           </v-list-item>
 
-          <router-link v-bind:to="{ name: 'cal' }">
-            <button class="btn btn-success">Edit</button>
-          </router-link>
-
         </v-list-item-group>
       </v-list>
 
@@ -41,7 +37,12 @@
         <v-icon>mdi-dots-vertical</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-row justify="center">
+    <!-- メイン -->
+    <v-main>
+      <v-container fluid>
+        <RouterView ref="view"></RouterView>
+      </v-container>
+      <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="400">
       <v-card >
         <v-toolbar dark color="primary">
@@ -61,11 +62,6 @@
       </v-card>
     </v-dialog>
     </v-row>
-    <!-- メイン -->
-    <v-main>
-      <v-container fluid>
-        <RouterView ref="view"></RouterView>
-      </v-container>
     </v-main>
 
     <!-- フッター -->

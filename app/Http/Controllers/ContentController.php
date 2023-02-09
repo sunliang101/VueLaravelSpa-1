@@ -70,7 +70,7 @@ class ContentController extends Controller
         foreach ($cs as $c) {
             $wkary = json_decode($c["vue"], true);
             $wkary["idreal"] =  $c["id"];
-            if (empty($wkary["lvl"])) {
+            if (!array_key_exists("lvl", $wkary)) {
                 $wkary["lvl"] = 3;
             }
 
