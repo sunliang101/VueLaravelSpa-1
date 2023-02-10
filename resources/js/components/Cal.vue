@@ -268,12 +268,21 @@ export default {
       console.log(p);
       axios.get('/api/contents', p)
         .then((res) => {
+          console.log(res);
           this.contents = res.data;
           this.nowIndex = 0;
           this.content = this.contents[this.nowIndex];
           this.refArr.push(this.content.idreal);
 
-        });
+        }).catch(error => {
+  const {
+    status,
+    statusText
+  } = error.response;
+  console.log(`Error! HTTP Status: ${status} ${statusText}`);
+  
+  this.$emit('childevent');
+});
     },
 
     lvlupd() {

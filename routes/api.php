@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Log;
 Route::post('/login', 'Auth\LoginController@authenticate');
 
 
-Route::get('/contents', 'ContentController@index');
+Route::get('/contents', 'ContentController@index')->middleware('auth');
 Route::get('/contents2','ContentController@index2');
 
 Route::get('/cal', function() {
     return response()->json([]);;
-});
+})->middleware('auth');
 
 Route::put('/contents/{content}', 'ContentController@update');
 Route::get('/tasks', 'TaskController@index');

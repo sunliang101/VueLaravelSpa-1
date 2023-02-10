@@ -40,7 +40,7 @@
     <!-- メイン -->
     <v-main>
       <v-container fluid>
-        <RouterView ref="view"></RouterView>
+        <RouterView ref="view" v-on:childevent="testMethod" ></RouterView>
       </v-container>
       <v-row justify="center">
     <v-dialog v-model="dialog" persistent max-width="400">
@@ -87,7 +87,7 @@ export default {
     return {
       drawer: false,
       cond: this.$route.query.type,
-      dialog: true,
+      dialog: false,
       loginForm: {
         name: "",
         password: "",
@@ -115,6 +115,10 @@ export default {
   },
 
   methods: {
+    testMethod() {
+      this.dialog = true;
+      
+    }, 
     onKeypressEnter() {
 
       var p = {
